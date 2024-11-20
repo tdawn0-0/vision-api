@@ -4,10 +4,10 @@ import SwiftOpenAPI
 
 struct TextDetectionController: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
-        let textDetectionRoute = routes.grouped("textDetection")
-        textDetectionRoute.post("recognizeText", use: recognizeTextRequest)
+        let textDetectionRoute = routes.grouped("text-detection")
+        textDetectionRoute.post("recognize-text", use: recognizeTextRequest)
             .openAPI(
-                description: "The recognitionLanguages field is optional and should be separated by commas if provided. For example: zh,en.",
+                description: "recognizes text in an image. OCR.",
                 body: .type(recognizeText.self),
                 contentType: .application(.json),
                 response: .type(recognizeTextResponse.self)
