@@ -6,7 +6,7 @@ struct TextDetectionController: RouteCollection {
         let textDetectionRoute = routes.grouped("textDetection")
         textDetectionRoute.post("recognizeText", use: recognizeTextRequest)
             .openAPI(
-                description: "recognitionLanguages field is split by comma. For example: zh,en",
+                description: "The recognitionLanguages field is optional and should be separated by commas if provided. For example: zh,en.",
                 body: .type(recognizeText.self),
                 contentType: .multipart(.formData),
                 response: .type(recognizeTextResponse.self)
@@ -15,7 +15,7 @@ struct TextDetectionController: RouteCollection {
 
     @Sendable func recognizeTextRequest(req: Request) async throws -> recognizeTextResponse {
         let requestForm = try req.content.decode(recognizeText.self)
-        let recognitionLanguages: [String] = requestForm.recognitionLanguages.split(separator: ",").map { String($0) }
+
         var textString = ""
         let requestHandler = VNImageRequestHandler(data: requestForm.imageFile)
         func recognizeTextHandler(request: VNRequest, error: Error?) {
@@ -32,7 +32,14 @@ struct TextDetectionController: RouteCollection {
         }
 
         let request = VNRecognizeTextRequest(completionHandler: recognizeTextHandler)
-        request.recognitionLanguages = recognitionLanguages
+
+        let recognitionLanguages = requestForm.recognitionLanguages?.split(separator: ",").map { String($0) }
+        if let languages = recognitionLanguages {
+            request.recognitionLanguages = languages
+        } else {
+            request.automaticallyDetectsLanguage = true
+        }
+
         do {
             try requestHandler.perform([request])
         } catch {
@@ -46,7 +53,7 @@ struct TextDetectionController: RouteCollection {
 
 struct recognizeText: Content {
     var imageFile: Data
-    var recognitionLanguages: String
+    var recognitionLanguages: String?
 }
 
 struct recognizeTextResponse: Content {
