@@ -15,7 +15,7 @@ struct ImageFeatureController: RouteCollection {
                 description: "Remove image background.",
                 body: .type(backgroundRemoval.self),
                 contentType: .multipart(.formData),
-                response: .type(backgroundRemovalResponse.self),
+                response: .type(Data.self),
                 responseContentType: MediaType("image", "png")
             )
     }
@@ -65,8 +65,4 @@ struct ImageFeatureController: RouteCollection {
 struct backgroundRemoval: Content {
     /// image file
     var imageFile: Data
-}
-
-struct backgroundRemovalResponse: Content {
-    var text: String
 }
