@@ -14,9 +14,10 @@ Vision API is an open-source project built with the Vapor framework, designed to
 ## Features
 
 - **Text Recognition (OCR)**: Extract text from images using Optical Character Recognition (OCR).
+- **Background Removal**: Remove the background from images.
 - ~~**Image Classification**: Use Vision framework for image classification.~~
 - ~~**Object Detection**: Detect objects and facial features within images.~~
-- ~~**Barcode/QR Code Recognition**: Scan and decode barcodes and QR codes in images.~~
+- ~~**Barcode Recognition**: Scan and decode barcodes and QR codes in images.~~
 
 For more feature visit: [Vision Framwork](https://developer.apple.com/documentation/vision/)
 
@@ -60,7 +61,7 @@ For more API detail visit: http://localhost:8080/Swagger/index.html
 - [ ] Barcode detection
 - [ ] Image aesthetics analysis
 - [ ] Animal detection
-- [ ] Background removal
+- [x] Background removal
 
 ## Contributing
 
