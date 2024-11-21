@@ -15,7 +15,8 @@ struct ImageFeatureController: RouteCollection {
                 description: "Remove image background.",
                 body: .type(backgroundRemoval.self),
                 contentType: .multipart(.formData),
-                response: .type(backgroundRemovalResponse.self)
+                response: .type(backgroundRemovalResponse.self),
+                responseContentType: MediaType("image", "png")
             )
     }
 
@@ -55,6 +56,7 @@ struct ImageFeatureController: RouteCollection {
         
         let response = Response(status: .ok, body: .init(data: pngData))
         response.headers.contentType = .png
+        response.headers.contentDisposition = .init(HTTPHeaders.ContentDisposition.Value.attachment, filename: "image.png")
         return response
     }
 }
