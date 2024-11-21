@@ -8,5 +8,10 @@ func routes(_ app: Application) throws {
     }
 
     try app.register(collection: TextDetectionController())
+    if #available(macOS 15.0, *) {
+        try app.register(collection: ImageFeatureController())
+    } else {
+        // Fallback on earlier versions
+    }
     try app.register(collection: OpenAPIController())
 }
