@@ -22,41 +22,42 @@ struct ImageFeatureController: RouteCollection {
 
     @Sendable func backgroundRemovalRequest(req: Request) async throws -> Response {
         let requestForm = try req.content.decode(backgroundRemoval.self)
-        
+
         let handler = VNImageRequestHandler(data: requestForm.imageFile)
         let request = VNGenerateForegroundInstanceMaskRequest()
-        
+
         try handler.perform([request])
-        
-        guard let observation = request.results?.first else {
-            return Response(status: .internalServerError, body: .init(stringLiteral: "No foreground instance found."))
+
+        guard let observation = request.results?.first,
+              !observation.allInstances.isEmpty
+        else {
+            throw Abort(.internalServerError, reason: "No foreground instance found.")
         }
-        
-        if observation.allInstances.count < 1 {
-            return Response(status: .internalServerError, body: .init(stringLiteral: "No foreground instance found."))
-        }
-        
-        let handler2 = VNImageRequestHandler(data: requestForm.imageFile)
-        let finalImage = try observation.generateMaskedImage(ofInstances: IndexSet(integersIn: 1 ... observation.allInstances.count + 1), from: handler2, croppedToInstancesExtent: true)
-        
+
+        let finalImage = try observation.generateMaskedImage(
+            ofInstances: IndexSet(integersIn: 1 ... observation.allInstances.count),
+            from: VNImageRequestHandler(data: requestForm.imageFile),
+            croppedToInstancesExtent: true
+        )
+
         let ciImage = CIImage(cvPixelBuffer: finalImage)
         let context = CIContext(options: nil)
-        
+
         guard let cgImage = context.createCGImage(ciImage, from: ciImage.extent) else {
-            return Response(status: .internalServerError, body: .init(stringLiteral: "Failed to convert image."))
+            throw Abort(.internalServerError, reason: "Failed to convert image.")
         }
+
         let data = NSMutableData()
-        let imageDestination = CGImageDestinationCreateWithData(data, UTType.png.identifier as CFString, 1, nil)
-        guard let unwrappedImageDestination = imageDestination else {
-            return Response(status: .internalServerError, body: .init(stringLiteral: "Failed to create image destination."))
+        guard let imageDestination = CGImageDestinationCreateWithData(data, UTType.png.identifier as CFString, 1, nil) else {
+            throw Abort(.internalServerError, reason: "Failed to create image destination.")
         }
-        CGImageDestinationAddImage(unwrappedImageDestination, cgImage, nil)
-        CGImageDestinationFinalize(unwrappedImageDestination)
-        let pngData = data as Data
-        
-        let response = Response(status: .ok, body: .init(data: pngData))
+
+        CGImageDestinationAddImage(imageDestination, cgImage, nil)
+        CGImageDestinationFinalize(imageDestination)
+
+        let response = Response(status: .ok, body: .init(data: data as Data))
         response.headers.contentType = .png
-        response.headers.contentDisposition = .init(HTTPHeaders.ContentDisposition.Value.attachment, filename: "image.png")
+        response.headers.contentDisposition = .init(.attachment, filename: "image.png")
         return response
     }
 }
