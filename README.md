@@ -55,13 +55,67 @@ Once the server is running, you can send HTTP requests to interact with the API.
 For more API detail visit: http://localhost:8080/Swagger/index.html
 
 ## TODO
-- [ ] Text Area Recognition
-- [ ] Image Classification
-- [ ] Face and body detection
-- [ ] Barcode detection
-- [ ] Image aesthetics analysis
-- [ ] Animal detection
-- [x] Background removal
+
+### Completed
+- [x] Background Removal — `VNGenerateForegroundInstanceMaskRequest`
+- [x] Text Recognition (OCR) — `VNRecognizeTextRequest`
+
+### On the way
+
+- [ ] **Image Aesthetics Scoring** *(macOS 15+)* — `CalculateImageAestheticsScoresRequest`
+  - Returns `overallScore` (-1 to 1) based on blur, exposure, color balance, composition, subject matter
+  - Returns `isUtility` to distinguish artistic photos from screenshots/receipts/documents
+  - Use case: rank photos, auto-select the best shot from a burst
+
+- [ ] **Saliency Heatmap / Smart Crop** *(macOS 10.15+)* — `VNGenerateAttentionBasedSaliencyImageRequest` / `VNGenerateObjectnessBasedSaliencyImageRequest`
+  - Attention-based: simulates where human eyes are drawn first
+  - Objectness-based: highlights regions most likely to contain objects
+  - Use case: smart thumbnail cropping, visual focus analysis
+
+- [ ] **Image Classification / Auto Tagging** *(macOS 10.15+)* — `VNClassifyImageRequest`
+  - Returns 1000+ category labels with confidence scores (e.g. `dog`, `beach`, `food`)
+  - Use case: automatic image tagging, content pre-filtering
+
+- [ ] **Image Similarity / Feature Print** *(macOS 10.15+)* — `VNGenerateImageFeaturePrintRequest`
+  - Generates a feature vector for an image; compute distance between two vectors for similarity score
+  - Use case: reverse image search, duplicate detection
+
+- [ ] **Barcode & QR Code Detection** *(macOS 10.13+)* — `VNDetectBarcodesRequest`
+  - Supports QR, PDF417, Aztec, Code128, EAN-13, DataMatrix and more
+  - Returns decoded value + bounding box position
+
+- [ ] **Face Detection** *(macOS 10.13+)* — `VNDetectFaceRectanglesRequest`
+  - Detects faces and returns bounding boxes with confidence scores
+
+- [ ] **Face Landmarks** *(macOS 10.13+)* — `VNDetectFaceLandmarksRequest`
+  - Returns 68 facial keypoints: eyes, nose, mouth, eyebrows, jaw contour
+
+- [ ] **Face Capture Quality** *(macOS 10.15+)* — `VNDetectFaceCaptureQualityRequest`
+  - Scores face image quality (0–1); use case: validate ID photo suitability
+
+- [ ] **Document Detection / Scanner** *(macOS 12+)* — `VNDetectDocumentSegmentationRequest`
+  - Detects document corners (quadrilateral) + saliency mask
+  - Use case: document scanning with perspective correction
+
+- [ ] **Human Presence Detection** *(macOS 10.15+)* — `VNDetectHumanRectanglesRequest`
+  - Detects people in an image and returns body bounding boxes (partial body supported)
+  - Use case: privacy detection, people counting
+
+- [ ] **Animal Detection** *(macOS 10.15+)* — `VNRecognizeAnimalsRequest`
+  - Detects cats and dogs with confidence scores
+  - Use case: pet apps, content filtering
+
+- [ ] **Human Body Pose** *(macOS 11+)* — `VNDetectHumanBodyPoseRequest`
+  - Returns 19 body skeleton keypoints (shoulders, elbows, wrists, hips, knees, ankles, etc.)
+  - Use case: fitness posture analysis, gesture recognition
+
+- [ ] **Hand Pose** *(macOS 11+)* — `VNDetectHumanHandPoseRequest`
+  - Returns 21 hand keypoints (4 joints per finger + wrist)
+  - Use case: hand gesture recognition, sign language detection
+
+- [ ] **Animal Body Pose** *(macOS 14+)* — `VNDetectAnimalBodyPoseRequest`
+  - Returns skeleton keypoints for animals (cats, dogs)
+  - Use case: animal behavior analysis, veterinary apps
 
 ## Contributing
 
