@@ -47,13 +47,25 @@ For more feature visit: [Vision Framwork](https://developer.apple.com/documentat
    swift run App
    ```
 
-   This will start the local server, which will listen on `http://localhost:8080` by default.
+   This will start the local server, which will listen on `http://localhost:9493` by default.
+
+   **Configuring the port** (priority: highest → lowest):
+
+   - `--port` CLI flag:
+     ```bash
+     swift run App serve --port 8080
+     ```
+   - `PORT` environment variable:
+     ```bash
+     PORT=8080 swift run App
+     ```
+   - Built-in default: `9493`
 
 ### Using the API
 
 Once the server is running, you can send HTTP requests to interact with the API.
 
-For more API detail visit: http://localhost:8080/Swagger/index.html
+For more API detail visit: http://localhost:9493/Swagger/index.html
 
 ## TODO
 
