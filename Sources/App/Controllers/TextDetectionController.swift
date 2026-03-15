@@ -1,15 +1,15 @@
+import SwiftOpenAPI
 import Vapor
 import Vision
-import SwiftOpenAPI
 
 struct TextDetectionController: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
         let textDetectionRoute = routes.grouped("text-detection")
         textDetectionRoute.post("recognize-text", use: recognizeTextRequest)
             .openAPI(
-                description: "recognizes text in an image. OCR.",
+                description: "Recognizes text in an image (OCR).",
                 body: .type(recognizeText.self),
-                contentType: .application(.json),
+                contentType: .multipart(.formData),
                 response: .type(recognizeTextResponse.self)
             )
     }
@@ -18,21 +18,15 @@ struct TextDetectionController: RouteCollection {
         let requestForm = try req.content.decode(recognizeText.self)
 
         var textString = ""
-        guard let imageData = Data(base64Encoded: requestForm.imageBase64) else {
-            return recognizeTextResponse(text: "Invalid image data")
-        }
 
-        let requestHandler = VNImageRequestHandler(data: imageData)
+        let requestHandler = VNImageRequestHandler(data: requestForm.imageFile)
         func recognizeTextHandler(request: VNRequest, error: Error?) {
-            guard let observations =
-                request.results as? [VNRecognizedTextObservation]
-            else {
+            guard let observations = request.results as? [VNRecognizedTextObservation] else {
                 return
             }
             let recognizedStrings = observations.compactMap { observation in
                 observation.topCandidates(1).first?.string
             }
-
             textString = recognizedStrings.joined(separator: "\n")
         }
 
@@ -61,11 +55,11 @@ struct TextDetectionController: RouteCollection {
 
 @OpenAPIDescriptable
 struct recognizeText: Content {
-    /// image string encoded by base64
-    var imageBase64: String
-    /// recognitionLanguages ISO language codes. For example: [zh, en]
+    /// image file
+    var imageFile: Data
+    /// recognition language ISO codes, e.g. ["zh-Hans", "en-US"]
     var recognitionLanguages: [String]?
-    /// recognitionLevel "0 = accurate" or "1 = fast", default is "accurate".
+    /// recognition level: 0 = accurate (default), 1 = fast
     var recognitionLevel: Int?
 }
 

@@ -49,6 +49,8 @@ For more feature visit: [Vision Framwork](https://developer.apple.com/documentat
 
    This will start the local server, which will listen on `http://localhost:9493` by default.
 
+   > All API endpoints that accept images use `multipart/form-data` with a binary `imageFile` field.
+
    **Configuring the port** (priority: highest → lowest):
 
    - `--port` CLI flag:
