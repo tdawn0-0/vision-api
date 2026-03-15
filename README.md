@@ -15,7 +15,9 @@
 
 > Stop paying per-API-call for image intelligence you can run for free on your own Mac.
 
-**Vision API** wraps Apple's native [Vision framework](https://developer.apple.com/documentation/vision/) — the same ML engine that powers macOS Photos, Live Text, and more — into a simple, self-hosted RESTful service. Drop it on any Mac, hit an endpoint, get results. No API keys. No usage limits. No image data leaving your machine.
+**Vision API** is a developer tool that turns your Mac into a private image-intelligence server. It wraps Apple's native [Vision framework](https://developer.apple.com/documentation/vision/) — the same ML engine powering macOS Photos, Live Text, and Shortcuts — and exposes its capabilities as a plain HTTP/JSON API. Your Mac already has these models built in; this project just gives them a network interface.
+
+The intended use case is **local or intranet self-hosting**: run it on a Mac you control, call it from your app, script, or CI pipeline, and never touch a third-party cloud service. Drop it on any Mac, hit an endpoint, get results. No API keys. No usage limits. No image data leaving your machine.
 
 Built for indie developers and small teams who want production-quality image analysis without the cloud bill or the privacy trade-off.
 
@@ -125,6 +127,21 @@ curl -X POST http://localhost:9493/ocr \
 - [ ] **Animal Body Pose** *(macOS 14+)* — skeleton keypoints for cats & dogs
 
 See the full [Vision framework capability list](https://developer.apple.com/documentation/vision/) for what's on the horizon.
+
+---
+
+## ⚖️ Legal Notice
+
+> **Read this before deploying Vision API in any commercial or production context.**
+
+This project calls macOS system frameworks (primarily [Apple Vision](https://developer.apple.com/documentation/vision/)) that are licensed as part of the macOS operating system. A few things to keep in mind:
+
+- **Personal & development use** — running this on your own Mac for personal projects or internal tooling is straightforward and the intended use case.
+- **Commercial SaaS / hosted service** — if you plan to wrap Vision API into a paid product, expose it to external users, or build a business around it, you are responsible for ensuring your use complies with Apple's [macOS Software License Agreement](https://www.apple.com/legal/sla/), your own jurisdiction's laws, and any relevant export regulations.
+- **Data & privacy** — Vision API processes images locally by design, but if you deploy it on a shared or internet-facing server, you are responsible for any privacy obligations (GDPR, CCPA, etc.) that apply to the image data passing through it.
+- **No warranty** — this project is provided as-is under the MIT license. The author(s) make no representations about fitness for any particular purpose.
+
+**The maintainers of this project accept no liability for any legal, regulatory, or commercial consequences arising from your use of Vision API. Commercial use is at your own risk.**
 
 ---
 
