@@ -18,6 +18,15 @@ struct ImageFeatureController: RouteCollection {
                 response: .type(Data.self),
                 responseContentType: MediaType("image", "png")
             )
+
+        imageFeatureRoute.post("aesthetics-scoring", use: aestheticsScoringRequest)
+            .openAPI(
+                description:
+                    "Calculate aesthetic scores for an image. Returns an overallScore (-1 to 1) and whether the image is a utility image (screenshot, receipt, document, etc.).",
+                body: .type(aestheticsScoring.self),
+                contentType: .multipart(.formData),
+                response: .type(aestheticsScoringResponse.self)
+            )
     }
 
     @Sendable func backgroundRemovalRequest(req: Request) async throws -> Response {
@@ -29,13 +38,13 @@ struct ImageFeatureController: RouteCollection {
         try handler.perform([request])
 
         guard let observation = request.results?.first,
-              !observation.allInstances.isEmpty
+            !observation.allInstances.isEmpty
         else {
             throw Abort(.internalServerError, reason: "No foreground instance found.")
         }
 
         let finalImage = try observation.generateMaskedImage(
-            ofInstances: IndexSet(integersIn: 1 ... observation.allInstances.count),
+            ofInstances: IndexSet(integersIn: 1...observation.allInstances.count),
             from: VNImageRequestHandler(data: requestForm.imageFile),
             croppedToInstancesExtent: true
         )
@@ -48,7 +57,10 @@ struct ImageFeatureController: RouteCollection {
         }
 
         let data = NSMutableData()
-        guard let imageDestination = CGImageDestinationCreateWithData(data, UTType.png.identifier as CFString, 1, nil) else {
+        guard
+            let imageDestination = CGImageDestinationCreateWithData(
+                data, UTType.png.identifier as CFString, 1, nil)
+        else {
             throw Abort(.internalServerError, reason: "Failed to create image destination.")
         }
 
@@ -60,10 +72,38 @@ struct ImageFeatureController: RouteCollection {
         response.headers.contentDisposition = .init(.attachment, filename: "image.png")
         return response
     }
+
+    @Sendable func aestheticsScoringRequest(req: Request) async throws -> aestheticsScoringResponse
+    {
+        let requestForm = try req.content.decode(aestheticsScoring.self)
+
+        let request = CalculateImageAestheticsScoresRequest()
+        let observation = try await request.perform(on: requestForm.imageFile)
+
+        return aestheticsScoringResponse(
+            overallScore: observation.overallScore,
+            isUtility: observation.isUtility
+        )
+    }
 }
 
 @OpenAPIDescriptable
 struct backgroundRemoval: Content {
     /// image file
     var imageFile: Data
+}
+
+@OpenAPIDescriptable
+struct aestheticsScoring: Content {
+    /// image file
+    var imageFile: Data
+}
+
+struct aestheticsScoringResponse: Content {
+    /// Overall aesthetic score ranging from -1.0 (low quality) to 1.0 (high quality).
+    /// Based on factors such as blur, exposure, color balance, composition, and subject matter.
+    var overallScore: Float
+    /// Whether the image is a utility image (e.g. screenshot, receipt, document)
+    /// rather than an artistic or personal photo.
+    var isUtility: Bool
 }

@@ -15,6 +15,7 @@ Vision API is an open-source project built with the Vapor framework, designed to
 
 - **Text Recognition (OCR)**: Extract text from images using Optical Character Recognition (OCR).
 - **Background Removal**: Remove the background from images.
+- **Image Aesthetics Scoring** *(macOS 15+)*: Score image quality and aesthetics, returning an `overallScore` (-1 to 1) and an `isUtility` flag to distinguish artistic photos from screenshots, receipts, and documents.
 - ~~**Image Classification**: Use Vision framework for image classification.~~
 - ~~**Object Detection**: Detect objects and facial features within images.~~
 - ~~**Barcode Recognition**: Scan and decode barcodes and QR codes in images.~~
@@ -59,10 +60,11 @@ For more API detail visit: http://localhost:8080/Swagger/index.html
 ### Completed
 - [x] Background Removal — `VNGenerateForegroundInstanceMaskRequest`
 - [x] Text Recognition (OCR) — `VNRecognizeTextRequest`
+- [x] Image Aesthetics Scoring *(macOS 15+)* — `CalculateImageAestheticsScoresRequest`
 
 ### On the way
 
-- [ ] **Image Aesthetics Scoring** *(macOS 15+)* — `CalculateImageAestheticsScoresRequest`
+- [x] **Image Aesthetics Scoring** *(macOS 15+)* — `CalculateImageAestheticsScoresRequest`
   - Returns `overallScore` (-1 to 1) based on blur, exposure, color balance, composition, subject matter
   - Returns `isUtility` to distinguish artistic photos from screenshots/receipts/documents
   - Use case: rank photos, auto-select the best shot from a burst
