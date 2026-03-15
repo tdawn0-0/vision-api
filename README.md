@@ -1,8 +1,12 @@
 <div align="center">
 
+[中文](README_CN.md) | English
+
 # 🔍 Vision API
 
 **Apple's on-device ML power, exposed as a clean REST API — self-hosted, zero cloud, zero cost.**
+
+**Apple 设备端 ML 能力，封装为简洁的 REST API —— 本地自托管，零云服务，零成本。**
 
 [![Swift](https://img.shields.io/badge/Swift-6.0-orange.svg)](https://swift.org)
 [![Vapor](https://img.shields.io/badge/Vapor-4-blue.svg)](https://vapor.codes)
