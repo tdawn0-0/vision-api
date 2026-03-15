@@ -5,6 +5,16 @@ import Vision
 struct ImageClassificationController: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
         let imageClassificationRoute = routes.grouped("image-classification")
+        imageClassificationRoute.get("supported-identifiers", use: supportedIdentifiersRequest)
+            .openAPI(
+                description: """
+                    Returns all category label identifiers supported by `VNClassifyImageRequest` \
+                    under the current configuration (e.g. `dog`, `beach`, `food`).
+                    The list reflects the exact set of identifiers that may appear in a `/classify` response.
+                    """,
+                response: .type(supportedIdentifiersResponse.self)
+            )
+
         imageClassificationRoute.post("classify", use: classifyImageRequest)
             .openAPI(
                 description: """
@@ -16,6 +26,20 @@ struct ImageClassificationController: RouteCollection {
                 contentType: .multipart(.formData),
                 response: .type(classifyImageResponse.self)
             )
+    }
+
+    @Sendable func supportedIdentifiersRequest(req: Request) async throws
+        -> supportedIdentifiersResponse
+    {
+        do {
+            let identifiers = try VNClassifyImageRequest().supportedIdentifiers()
+                .sorted()
+            return supportedIdentifiersResponse(identifiers: identifiers, count: identifiers.count)
+        } catch {
+            throw Abort(
+                .internalServerError,
+                reason: "Failed to retrieve supported identifiers: \(error).")
+        }
     }
 
     @Sendable func classifyImageRequest(req: Request) async throws -> classifyImageResponse {
@@ -72,4 +96,11 @@ struct ClassificationResult: Content {
 struct classifyImageResponse: Content {
     /// List of classification labels sorted by confidence descending
     var classifications: [ClassificationResult]
+}
+
+struct supportedIdentifiersResponse: Content {
+    /// All category label identifiers supported by VNClassifyImageRequest, sorted alphabetically
+    var identifiers: [String]
+    /// Total number of supported identifiers
+    var count: Int
 }
