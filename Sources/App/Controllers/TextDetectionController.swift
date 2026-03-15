@@ -19,7 +19,7 @@ struct TextDetectionController: RouteCollection {
 
         var textString = ""
 
-        let requestHandler = VNImageRequestHandler(data: requestForm.imageFile)
+        let requestHandler = VNImageRequestHandler(data: requestForm.imageFile.data)
         func recognizeTextHandler(request: VNRequest, error: Error?) {
             guard let observations = request.results as? [VNRecognizedTextObservation] else {
                 return
@@ -56,7 +56,7 @@ struct TextDetectionController: RouteCollection {
 @OpenAPIDescriptable
 struct recognizeText: Content {
     /// image file
-    var imageFile: Data
+    var imageFile: BinaryFile
     /// recognition language ISO codes, e.g. ["zh-Hans", "en-US"]
     var recognitionLanguages: [String]?
     /// recognition level: 0 = accurate (default), 1 = fast

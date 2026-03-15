@@ -32,7 +32,7 @@ struct ImageFeatureController: RouteCollection {
     @Sendable func backgroundRemovalRequest(req: Request) async throws -> Response {
         let requestForm = try req.content.decode(backgroundRemoval.self)
 
-        let handler = VNImageRequestHandler(data: requestForm.imageFile)
+        let handler = VNImageRequestHandler(data: requestForm.imageFile.data)
         let request = VNGenerateForegroundInstanceMaskRequest()
 
         try handler.perform([request])
@@ -45,7 +45,7 @@ struct ImageFeatureController: RouteCollection {
 
         let finalImage = try observation.generateMaskedImage(
             ofInstances: IndexSet(integersIn: 1...observation.allInstances.count),
-            from: VNImageRequestHandler(data: requestForm.imageFile),
+            from: VNImageRequestHandler(data: requestForm.imageFile.data),
             croppedToInstancesExtent: true
         )
 
@@ -78,7 +78,7 @@ struct ImageFeatureController: RouteCollection {
         let requestForm = try req.content.decode(aestheticsScoring.self)
 
         let request = CalculateImageAestheticsScoresRequest()
-        let observation = try await request.perform(on: requestForm.imageFile)
+        let observation = try await request.perform(on: requestForm.imageFile.data)
 
         return aestheticsScoringResponse(
             overallScore: observation.overallScore,
@@ -90,13 +90,13 @@ struct ImageFeatureController: RouteCollection {
 @OpenAPIDescriptable
 struct backgroundRemoval: Content {
     /// image file
-    var imageFile: Data
+    var imageFile: BinaryFile
 }
 
 @OpenAPIDescriptable
 struct aestheticsScoring: Content {
     /// image file
-    var imageFile: Data
+    var imageFile: BinaryFile
 }
 
 struct aestheticsScoringResponse: Content {
