@@ -115,12 +115,13 @@ curl -X POST http://localhost:9493/ocr \
   - `isUtility`：区分艺术照片与截图 / 收据 / 文档
 - [x] **图像分类 / 自动标签** *(macOS 10.15+)* —— `VNClassifyImageRequest`
   - 1000+ 类别标签，支持可选的 `confidenceThreshold` 和 `maxResults` 过滤
+- [x] **条码 & 二维码识别** *(macOS 10.13+)* —— 支持 QR、EAN-13、Code128、DataMatrix 等
+  - 返回 `payload` 和 `symbology`（例如 `VNBarcodeSymbologyQR`）
 
 ### 即将推出
 
 - [ ] **显著性热图 / 智能裁剪** *(macOS 10.15+)* —— 基于注意力与目标性的裁剪建议
 - [ ] **图像相似度** *(macOS 10.15+)* —— 特征向量对比，用于以图搜图和去重
-- [ ] **条码 & 二维码识别** *(macOS 10.13+)* —— 支持 QR、EAN-13、Code128、DataMatrix 等
 - [ ] **人脸检测与关键点** *(macOS 10.13+)* —— 边界框 + 68 个面部关键点
 - [ ] **人脸采集质量评估** *(macOS 10.15+)* —— 0–1 质量分，用于证件照校验
 - [ ] **文档扫描** *(macOS 12+)* —— 角点检测 + 透视校正

@@ -117,12 +117,13 @@ curl -X POST http://localhost:9493/ocr \
   - `isUtility`: separates artistic photos from screenshots / receipts / documents
 - [x] **Image Classification / Auto Tagging** *(macOS 10.15+)* — `VNClassifyImageRequest`
   - 1000+ category labels, optional `confidenceThreshold` and `maxResults` filters
+- [x] **Barcode & QR Detection** *(macOS 10.13+)* — QR, EAN-13, Code128, DataMatrix, and more
+  - Returns `payload` and `symbology` (e.g. `VNBarcodeSymbologyQR`)
 
 ### Coming Soon
 
 - [ ] **Saliency Heatmap / Smart Crop** *(macOS 10.15+)* — attention & objectness-based cropping hints
 - [ ] **Image Similarity** *(macOS 10.15+)* — feature vector comparison for reverse image search & dedup
-- [ ] **Barcode & QR Detection** *(macOS 10.13+)* — QR, EAN-13, Code128, DataMatrix, and more
 - [ ] **Face Detection & Landmarks** *(macOS 10.13+)* — bounding boxes + 68-point facial keypoints
 - [ ] **Face Capture Quality** *(macOS 10.15+)* — 0–1 quality score for ID photo validation
 - [ ] **Document Scanner** *(macOS 12+)* — corner detection + perspective correction

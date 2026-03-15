@@ -8,6 +8,7 @@ func routes(_ app: Application) throws {
     }
 
     try app.register(collection: TextDetectionController())
+    try app.register(collection: BarcodeDetectionController())
     if #available(macOS 15.0, *) {
         try app.register(collection: ImageFeatureController())
     } else {
