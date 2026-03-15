@@ -13,5 +13,6 @@ func routes(_ app: Application) throws {
     } else {
         // Fallback on earlier versions
     }
+    try app.register(collection: ImageClassificationController())
     try app.register(collection: OpenAPIController())
 }

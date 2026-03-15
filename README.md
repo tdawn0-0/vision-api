@@ -16,7 +16,7 @@ Vision API is an open-source project built with the Vapor framework, designed to
 - **Text Recognition (OCR)**: Extract text from images using Optical Character Recognition (OCR).
 - **Background Removal**: Remove the background from images.
 - **Image Aesthetics Scoring** *(macOS 15+)*: Score image quality and aesthetics, returning an `overallScore` (-1 to 1) and an `isUtility` flag to distinguish artistic photos from screenshots, receipts, and documents.
-- ~~**Image Classification**: Use Vision framework for image classification.~~
+- **Image Classification / Auto Tagging** *(macOS 10.15+)*: Classify image content using `VNClassifyImageRequest`, returning 1000+ category labels (e.g. `dog`, `beach`, `food`) with confidence scores.
 - ~~**Object Detection**: Detect objects and facial features within images.~~
 - ~~**Barcode Recognition**: Scan and decode barcodes and QR codes in images.~~
 
@@ -71,12 +71,8 @@ For more API detail visit: http://localhost:9493/Swagger/index.html
 
 ## TODO
 
-### Completed
 - [x] Background Removal — `VNGenerateForegroundInstanceMaskRequest`
 - [x] Text Recognition (OCR) — `VNRecognizeTextRequest`
-- [x] Image Aesthetics Scoring *(macOS 15+)* — `CalculateImageAestheticsScoresRequest`
-
-### On the way
 
 - [x] **Image Aesthetics Scoring** *(macOS 15+)* — `CalculateImageAestheticsScoresRequest`
   - Returns `overallScore` (-1 to 1) based on blur, exposure, color balance, composition, subject matter
@@ -88,8 +84,10 @@ For more API detail visit: http://localhost:9493/Swagger/index.html
   - Objectness-based: highlights regions most likely to contain objects
   - Use case: smart thumbnail cropping, visual focus analysis
 
-- [ ] **Image Classification / Auto Tagging** *(macOS 10.15+)* — `VNClassifyImageRequest`
+- [x] **Image Classification / Auto Tagging** *(macOS 10.15+)* — `VNClassifyImageRequest`
   - Returns 1000+ category labels with confidence scores (e.g. `dog`, `beach`, `food`)
+  - Optional `confidenceThreshold` (Float, 0–1) to filter low-confidence labels
+  - Optional `maxResults` (Int) to cap the number of returned labels, sorted by confidence descending
   - Use case: automatic image tagging, content pre-filtering
 
 - [ ] **Image Similarity / Feature Print** *(macOS 10.15+)* — `VNGenerateImageFeaturePrintRequest`
