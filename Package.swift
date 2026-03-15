@@ -7,11 +7,9 @@ let package = Package(
         .macOS(.v15)
     ],
     dependencies: [
-        // 💧 A server-side Swift web framework.
-        .package(url: "https://github.com/vapor/vapor.git", from: "4.99.3"),
-        // 🔵 Non-blocking, event-driven networking for Swift. Used for custom executors
-        .package(url: "https://github.com/apple/swift-nio.git", from: "2.65.0"),
-        .package(url: "https://github.com/dankinsoid/VaporToOpenAPI.git", from: "4.7.1"),
+        .package(url: "https://github.com/vapor/vapor.git", from: "4.121.3"),
+        .package(url: "https://github.com/apple/swift-nio.git", from: "2.96.0"),
+        .package(url: "https://github.com/dankinsoid/VaporToOpenAPI.git", from: "4.9.1"),
     ],
     targets: [
         .executableTarget(
