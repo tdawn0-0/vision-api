@@ -33,7 +33,9 @@ struct TextDetectionController: RouteCollection {
         let textRequest = VNRecognizeTextRequest(completionHandler: recognizeTextHandler)
 
         if let languages = requestForm.recognitionLanguages {
-            textRequest.recognitionLanguages = languages
+            textRequest.recognitionLanguages = languages.split(separator: ",").map {
+                $0.trimmingCharacters(in: .whitespaces)
+            }
         } else {
             textRequest.automaticallyDetectsLanguage = true
         }
@@ -57,8 +59,8 @@ struct TextDetectionController: RouteCollection {
 struct recognizeText: Content {
     /// image file
     var imageFile: BinaryFile
-    /// recognition language ISO codes, e.g. ["zh-Hans", "en-US"]
-    var recognitionLanguages: [String]?
+    /// comma-separated recognition language ISO codes, e.g. "zh-Hans,en-US"
+    var recognitionLanguages: String?
     /// recognition level: 0 = accurate (default), 1 = fast
     var recognitionLevel: Int?
 }
