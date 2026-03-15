@@ -43,6 +43,7 @@ swift run App
 | ✂️ **Background Removal** | Remove backgrounds with pixel-perfect subject masking | 12+ |
 | 🎨 **Aesthetics Scoring** | Score photo quality (blur, exposure, composition) and detect utility images | 15+ |
 | 🏷️ **Auto Tagging / Classification** | Get 1000+ semantic labels (`dog`, `beach`, `food`) with confidence scores | 10.15+ |
+| 🔳 **Barcode / QR Detection** | Detect & decode QR codes, EAN-13, and 20+ other formats | 10.13+ |
 
 > 📖 Interactive API docs available at `http://localhost:9493/Swagger/index.html` once running.
 
